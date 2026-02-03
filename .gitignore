@@ -1,0 +1,25 @@
+# Rust / Cargo
+/target/
+AGENTS.md
+
+# IDEs and Tools
+.agent/
+.claude
+.claude/
+.vscode/
+.idea/
+.DS_Store
+
+# Temporary / Backup files
+*.swp
+*.bak
+*~
+Temp.lock
+
+# Dependencies (if vendor is used)
+/vendor/
+
+# Folders
+.cargo_home/
+test_dir/
+local/
