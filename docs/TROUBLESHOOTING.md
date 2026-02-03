@@ -9,5 +9,4 @@ Cause:
 - A `core-graphics` version mismatch between `core-text` and `zed-font-kit` can cause type identity conflicts on macOS (e.g., `CGFont` from different crate versions).
 
 Fix (in this repo):
-- Zeno patches `zed-font-kit` via `Cargo.toml` `[patch.crates-io]` to align `core-graphics` versions.
-
+- Zeno pins `core-text` to `=21.0.0` in `Cargo.toml` on macOS to prevent pulling in `core-graphics = 0.25` while GPUI expects `core-graphics = 0.24`.
