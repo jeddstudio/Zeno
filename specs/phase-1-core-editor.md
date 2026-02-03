@@ -79,3 +79,19 @@ Verify:
 
 Verify:
 - Manual selection behaves as expected; no panics.
+
+### Atomic Step 1.2a — Add Markdown highlighter module (Tree-sitter)
+- [ ] Add `src/markdown/` module with a minimal API:
+  - input: `&str`
+  - output: highlight spans in byte ranges
+- [ ] Add unit test(s) for stable spans on a sample Markdown snippet
+
+Verify:
+- `cargo test` passes.
+
+### Atomic Step 1.2b — Wire highlighting into editor rendering
+- [ ] Convert highlight spans into `TextRun`s per line (basic colors are fine).
+- [ ] Ensure un-highlighted text still renders correctly.
+
+Verify:
+- Manual: headings/emphasis/code show distinct colors.
