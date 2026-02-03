@@ -4,6 +4,7 @@ AGENTS.md
 
 # IDEs and Tools
 .agent/
+.codex/
 .claude
 .claude/
 .vscode/
