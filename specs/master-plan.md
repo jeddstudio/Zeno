@@ -4,9 +4,9 @@ This is the tracked (public) master plan for Zeno V1. When all items in this fil
 
 ## Phase 0: Foundations (IN PROGRESS)
 - [x] Atomic Step 0.1 — Boot GPUI window
-- [ ] Atomic Step 0.2 — Introduce `Workspace` root view
-- [ ] Atomic Step 0.3 — Add panel placeholders (Sidebar / Editor / Terminal)
-- [ ] Atomic Step 0.4 — Add basic theme constants
+- [x] Atomic Step 0.2 — Introduce `Workspace` root view
+- [x] Atomic Step 0.3 — Add panel placeholders (Sidebar / Editor / Terminal)
+- [x] Atomic Step 0.4 — Add basic theme constants
 
 ## Phase 1: Core Editor (PLANNED)
 - [ ] Atomic Step 1.1 — Zeno-owned text input/editing (buffer + cursor + selection)
@@ -33,4 +33,3 @@ This is the tracked (public) master plan for Zeno V1. When all items in this fil
 - [ ] Atomic Step 6.1 — Theme system (light/dark, tokens)
 - [ ] Atomic Step 6.2 — Performance audit (typing latency, large directories)
 - [ ] Atomic Step 6.3 — Export (HTML/PDF)
-
