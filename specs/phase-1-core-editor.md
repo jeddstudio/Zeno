@@ -43,6 +43,7 @@ This phase prioritizes **clarity, testability, and stable interfaces** over feat
 ## Proposed Atomic Steps
 
 ### Atomic Step 1.1a — Editor core: buffer + cursor + operations
+- [x] Implement editor core + tests
 - Add `TextBuffer` and `Cursor` model (selection deferred).
 - Add unit tests for:
   - inserting characters
@@ -76,4 +77,3 @@ Verify:
 
 Verify:
 - Manual selection behaves as expected; no panics.
-
