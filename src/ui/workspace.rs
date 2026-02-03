@@ -1,8 +1,18 @@
-use gpui::{Context, IntoElement, Render, Window, div, prelude::*, px, rgb};
+use gpui::{Context, Entity, IntoElement, Render, Window, div, prelude::*, px, rgb};
 
+use super::EditorView;
 use super::theme;
 
-pub struct Workspace;
+pub struct Workspace {
+    pub(crate) editor: Entity<EditorView>,
+}
+
+impl Workspace {
+    pub fn new(cx: &mut Context<Self>) -> Self {
+        let editor = cx.new(EditorView::new);
+        Self { editor }
+    }
+}
 
 impl Render for Workspace {
     fn render(&mut self, _window: &mut Window, _cx: &mut Context<Self>) -> impl IntoElement {
@@ -46,18 +56,7 @@ impl Render for Workspace {
                             .bg(rgb(theme::BG_APP))
                             .p_6()
                             .gap_3()
-                            .child(
-                                div()
-                                    .text_2xl()
-                                    .font_weight(gpui::FontWeight::BOLD)
-                                    .child("Zeno"),
-                            )
-                            .child(
-                                div()
-                                    .text_sm()
-                                    .text_color(rgb(theme::TEXT_MUTED))
-                                    .child("Editor Area (Phase 0 placeholder)"),
-                            ),
+                            .child(self.editor.clone()),
                     ),
             )
             .child(

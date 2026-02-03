@@ -55,6 +55,7 @@ Verify:
 - `cargo test` passes.
 
 ### Atomic Step 1.1b — Editor view: render text + caret
+- [x] Render editor view in Workspace
 - Render the buffer text in the Workspace’s center panel.
 - Render a visible caret (simple placeholder is acceptable).
 

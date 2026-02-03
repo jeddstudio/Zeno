@@ -119,9 +119,8 @@ impl EditorState {
             return;
         }
 
-        let mut next = String::with_capacity(
-            self.text.len() - (range.end - range.start) + new_text.len(),
-        );
+        let mut next =
+            String::with_capacity(self.text.len() - (range.end - range.start) + new_text.len());
         next.push_str(&self.text[..range.start]);
         next.push_str(new_text);
         next.push_str(&self.text[range.end..]);
@@ -230,4 +229,3 @@ mod tests {
         assert_eq!(editor.cursor(), 3);
     }
 }
-
