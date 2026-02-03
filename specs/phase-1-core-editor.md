@@ -91,8 +91,8 @@ Verify:
 - `cargo test` passes.
 
 ### Atomic Step 1.2b — Wire highlighting into editor rendering
-- [ ] Convert highlight spans into `TextRun`s per line (basic colors are fine).
-- [ ] Ensure un-highlighted text still renders correctly.
+- [x] Convert highlight spans into `TextRun`s per line (basic colors are fine).
+- [x] Ensure un-highlighted text still renders correctly.
 
 Verify:
 - Manual: headings/emphasis/code show distinct colors.

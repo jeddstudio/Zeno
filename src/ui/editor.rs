@@ -9,6 +9,7 @@ use gpui::{
 };
 
 use crate::editor::EditorState;
+use crate::markdown::highlight::{HighlightKind, HighlightSpan, highlight_markdown};
 
 actions!(
     zeno_editor,
@@ -24,12 +25,80 @@ actions!(
     ]
 );
 
+fn color_for_highlight_kind(kind: HighlightKind) -> Option<gpui::Hsla> {
+    match kind {
+        HighlightKind::Heading => Some(rgb(0x82aaff)),
+        HighlightKind::Strong => Some(rgb(0xffcb6b)),
+        HighlightKind::Emphasis => Some(rgb(0xffcb6b)),
+        HighlightKind::Code => Some(rgb(0xc3e88d)),
+        HighlightKind::Link => Some(rgb(0x89ddff)),
+        HighlightKind::Punctuation => Some(rgb(0x7a7a7a)),
+        HighlightKind::Other => None,
+    }
+}
+
+fn runs_for_line(
+    base_run: &TextRun,
+    line_start: usize,
+    line_end: usize,
+    highlights: &[HighlightSpan],
+) -> Vec<TextRun> {
+    let mut local_spans: Vec<(usize, usize, HighlightKind)> = highlights
+        .iter()
+        .filter_map(|span| {
+            if span.range.end <= line_start || span.range.start >= line_end {
+                return None;
+            }
+            let start = span.range.start.max(line_start) - line_start;
+            let end = span.range.end.min(line_end) - line_start;
+            (start < end).then_some((start, end, span.kind))
+        })
+        .collect();
+
+    local_spans.sort_by_key(|(start, end, _)| (*start, *end));
+
+    let mut runs = Vec::new();
+    let mut pos = 0usize;
+    for (start, end, kind) in local_spans {
+        if start > pos {
+            runs.push(TextRun {
+                len: start - pos,
+                ..base_run.clone()
+            });
+        }
+
+        let Some(color) = color_for_highlight_kind(kind) else {
+            continue;
+        };
+
+        let start = start.max(pos);
+        if end > start {
+            runs.push(TextRun {
+                len: end - start,
+                color,
+                ..base_run.clone()
+            });
+            pos = end;
+        }
+    }
+
+    if base_run.len > pos {
+        runs.push(TextRun {
+            len: base_run.len - pos,
+            ..base_run.clone()
+        });
+    }
+
+    runs.into_iter().filter(|r| r.len > 0).collect()
+}
+
 pub struct EditorView {
     focus_handle: FocusHandle,
     editor: EditorState,
     placeholder: SharedString,
     marked_range: Option<Range<usize>>,
     is_selecting: bool,
+    highlights: Vec<HighlightSpan>,
     last_bounds: Option<Bounds<Pixels>>,
     last_line_height: Option<Pixels>,
     last_line_starts: Option<Vec<usize>>,
@@ -44,6 +113,7 @@ impl EditorView {
             placeholder: "Type here…".into(),
             marked_range: None,
             is_selecting: false,
+            highlights: vec![],
             last_bounds: None,
             last_line_height: None,
             last_line_starts: None,
@@ -51,13 +121,19 @@ impl EditorView {
         }
     }
 
+    fn update_highlights(&mut self) {
+        self.highlights = highlight_markdown(self.editor.text());
+    }
+
     fn backspace(&mut self, _: &Backspace, _: &mut Window, cx: &mut Context<Self>) {
         self.editor.backspace();
+        self.update_highlights();
         cx.notify();
     }
 
     fn delete(&mut self, _: &Delete, _: &mut Window, cx: &mut Context<Self>) {
         self.editor.delete_forward();
+        self.update_highlights();
         cx.notify();
     }
 
@@ -88,6 +164,7 @@ impl EditorView {
 
     fn newline(&mut self, _: &Newline, _: &mut Window, cx: &mut Context<Self>) {
         self.editor.insert_str("\n");
+        self.update_highlights();
         cx.notify();
     }
 
@@ -246,6 +323,7 @@ impl EntityInputHandler for EditorView {
             .unwrap_or_else(|| self.editor.selection_range());
         self.editor.replace_range(range, new_text);
         self.marked_range = None;
+        self.update_highlights();
         cx.notify();
     }
 
@@ -277,6 +355,7 @@ impl EntityInputHandler for EditorView {
             self.editor.set_selection(anchor, cursor);
         }
 
+        self.update_highlights();
         cx.notify();
     }
 
@@ -459,10 +538,10 @@ impl Element for EditorElement {
                         .filter(|r| r.len > 0)
                         .collect()
                     } else {
-                        vec![base_run]
+                        runs_for_line(&base_run, start, end, &editor.highlights)
                     }
                 } else {
-                    vec![base_run]
+                    runs_for_line(&base_run, start, end, &editor.highlights)
                 }
             } else {
                 vec![base_run]
