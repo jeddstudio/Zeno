@@ -63,6 +63,7 @@ Verify:
 - `cargo run` shows editor area with caret.
 
 ### Atomic Step 1.1c — Key input wiring
+- [x] Wire key input and text input
 - Wire keydown/text input events to editor core:
   - printable characters insert
   - Enter inserts newline

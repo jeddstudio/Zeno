@@ -20,6 +20,10 @@ impl EditorState {
         self.cursor
     }
 
+    pub fn anchor(&self) -> usize {
+        self.anchor
+    }
+
     pub fn selection_range(&self) -> Range<usize> {
         let start = self.anchor.min(self.cursor);
         let end = self.anchor.max(self.cursor);
@@ -35,6 +39,16 @@ impl EditorState {
         self.cursor = self.cursor.min(self.text.len());
         self.anchor = self.anchor.min(self.text.len());
         self.collapse_selection();
+    }
+
+    pub fn set_cursor(&mut self, cursor: usize) {
+        self.cursor = cursor.min(self.text.len());
+        self.anchor = self.cursor;
+    }
+
+    pub fn set_selection(&mut self, anchor: usize, cursor: usize) {
+        self.anchor = anchor.min(self.text.len());
+        self.cursor = cursor.min(self.text.len());
     }
 
     pub fn collapse_selection(&mut self) {
