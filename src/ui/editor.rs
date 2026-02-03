@@ -3,9 +3,9 @@ use std::ops::Range;
 use gpui::{
     App, Bounds, Context, CursorStyle, Element, ElementId, ElementInputHandler, Entity,
     EntityInputHandler, FocusHandle, Focusable, GlobalElementId, LayoutId, MouseButton,
-    MouseDownEvent, PaintQuad, Pixels, Point, ShapedLine, SharedString, Style, TextRun,
-    UTF16Selection, UnderlineStyle, Window, actions, div, fill, hsla, point, prelude::*, px,
-    relative, rgb, rgba,
+    MouseDownEvent, MouseMoveEvent, MouseUpEvent, PaintQuad, Pixels, Point, ShapedLine,
+    SharedString, Style, TextRun, UTF16Selection, UnderlineStyle, Window, actions, div, fill, hsla,
+    point, prelude::*, px, relative, rgb, rgba,
 };
 
 use crate::editor::EditorState;
@@ -29,6 +29,7 @@ pub struct EditorView {
     editor: EditorState,
     placeholder: SharedString,
     marked_range: Option<Range<usize>>,
+    is_selecting: bool,
     last_bounds: Option<Bounds<Pixels>>,
     last_line_height: Option<Pixels>,
     last_line_starts: Option<Vec<usize>>,
@@ -42,6 +43,7 @@ impl EditorView {
             editor: EditorState::new(),
             placeholder: "Type here…".into(),
             marked_range: None,
+            is_selecting: false,
             last_bounds: None,
             last_line_height: None,
             last_line_starts: None,
@@ -96,6 +98,7 @@ impl EditorView {
         cx: &mut Context<Self>,
     ) {
         window.focus(&self.focus_handle(cx));
+        self.is_selecting = true;
         let offset = self.index_for_mouse_position(event.position);
         if event.modifiers.shift {
             self.editor.set_selection(self.editor.anchor(), offset);
@@ -103,6 +106,24 @@ impl EditorView {
             self.editor.set_cursor(offset);
         }
         cx.notify();
+    }
+
+    fn on_mouse_move(
+        &mut self,
+        event: &MouseMoveEvent,
+        _window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        if !self.is_selecting {
+            return;
+        }
+        let offset = self.index_for_mouse_position(event.position);
+        self.editor.set_selection(self.editor.anchor(), offset);
+        cx.notify();
+    }
+
+    fn on_mouse_up(&mut self, _: &MouseUpEvent, _window: &mut Window, _cx: &mut Context<Self>) {
+        self.is_selecting = false;
     }
 
     fn offset_to_utf16(&self, utf8_offset: usize) -> usize {
@@ -583,6 +604,9 @@ impl Render for EditorView {
             .on_action(cx.listener(Self::select_all))
             .on_action(cx.listener(Self::newline))
             .on_mouse_down(MouseButton::Left, cx.listener(Self::on_mouse_down))
+            .on_mouse_move(cx.listener(Self::on_mouse_move))
+            .on_mouse_up(MouseButton::Left, cx.listener(Self::on_mouse_up))
+            .on_mouse_up_out(MouseButton::Left, cx.listener(Self::on_mouse_up))
             .flex()
             .flex_col()
             .w_full()

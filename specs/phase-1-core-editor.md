@@ -74,6 +74,7 @@ Verify:
 - Manual: typing updates UI; caret moves; backspace works.
 
 ### Atomic Step 1.1d — Selection (optional follow-up)
+- [x] Add mouse selection + shift selection
 - Shift+Left/Right expands selection
 - typing replaces selection
 
