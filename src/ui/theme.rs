@@ -4,4 +4,3 @@ pub const BG_TERMINAL: u32 = 0x0f0f0f;
 
 pub const TEXT_PRIMARY: u32 = 0xffffff;
 pub const TEXT_MUTED: u32 = 0xb0b0b0;
-
