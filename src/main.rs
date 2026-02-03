@@ -1,5 +1,6 @@
 mod ui;
 
+use gpui::AppContext;
 use gpui::{App, Application, Bounds, WindowBounds, WindowOptions, px, size};
 
 use ui::Workspace;
