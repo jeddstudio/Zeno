@@ -1,5 +1,7 @@
 use gpui::{Context, IntoElement, Render, Window, div, prelude::*, px, rgb};
 
+use super::theme;
+
 pub struct Workspace;
 
 impl Render for Workspace {
@@ -8,8 +10,8 @@ impl Render for Workspace {
             .flex()
             .flex_col()
             .size_full()
-            .bg(rgb(0x1e1e1e))
-            .text_color(rgb(0xffffff))
+            .bg(rgb(theme::BG_APP))
+            .text_color(rgb(theme::TEXT_PRIMARY))
             .child(
                 div()
                     .flex()
@@ -20,7 +22,7 @@ impl Render for Workspace {
                             .flex()
                             .flex_col()
                             .w(px(280.))
-                            .bg(rgb(0x151515))
+                            .bg(rgb(theme::BG_SIDEBAR))
                             .p_4()
                             .gap_2()
                             .child(
@@ -32,7 +34,7 @@ impl Render for Workspace {
                             .child(
                                 div()
                                     .text_xs()
-                                    .text_color(rgb(0xb0b0b0))
+                                    .text_color(rgb(theme::TEXT_MUTED))
                                     .child("Phase 0 placeholder"),
                             ),
                     )
@@ -41,7 +43,7 @@ impl Render for Workspace {
                             .flex()
                             .flex_col()
                             .flex_grow()
-                            .bg(rgb(0x1e1e1e))
+                            .bg(rgb(theme::BG_APP))
                             .p_6()
                             .gap_3()
                             .child(
@@ -53,7 +55,7 @@ impl Render for Workspace {
                             .child(
                                 div()
                                     .text_sm()
-                                    .text_color(rgb(0xb0b0b0))
+                                    .text_color(rgb(theme::TEXT_MUTED))
                                     .child("Editor Area (Phase 0 placeholder)"),
                             ),
                     ),
@@ -61,7 +63,7 @@ impl Render for Workspace {
             .child(
                 div()
                     .h(px(180.))
-                    .bg(rgb(0x0f0f0f))
+                    .bg(rgb(theme::BG_TERMINAL))
                     .p_3()
                     .gap_2()
                     .child(
@@ -73,7 +75,7 @@ impl Render for Workspace {
                     .child(
                         div()
                             .text_xs()
-                            .text_color(rgb(0xb0b0b0))
+                            .text_color(rgb(theme::TEXT_MUTED))
                             .child("Phase 0 placeholder (collapsed by default later)"),
                     ),
             )
