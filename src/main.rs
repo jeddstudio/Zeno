@@ -1,4 +1,5 @@
 mod editor;
+mod markdown;
 mod ui;
 
 use gpui::AppContext;

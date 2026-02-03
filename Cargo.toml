@@ -5,6 +5,8 @@ edition = "2024"
 
 [dependencies]
 gpui = "0.2.2"
+tree-sitter = "0.26"
+tree-sitter-md = "0.5.2"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 # gpui depends on `core-text = "21"` and `core-graphics = "0.24"`. Newer `core-text` releases can
