@@ -1,6 +1,9 @@
 # Zeno V1 Master Plan
 
-This is the tracked (public) master plan for Zeno V1. When all items in this file are completed, Zeno is considered “V1”.
+This is the **authoritative checklist** for Zeno V1. When every item below is checked, Zeno is V1.
+
+- Narrative roadmap → `ATOMIC_DEVELOPMENT_PLAN.md`
+- Detailed spec per phase → `specs/phase-N-*.md`
 
 ## Phase 0: Foundations (COMPLETED)
 - [x] Atomic Step 0.1 — Boot GPUI window
@@ -8,9 +11,9 @@ This is the tracked (public) master plan for Zeno V1. When all items in this fil
 - [x] Atomic Step 0.3 — Add panel placeholders (Sidebar / Editor / Terminal)
 - [x] Atomic Step 0.4 — Add basic theme constants
 
-## Phase 1: Core Editor (IN PROGRESS)
+## Phase 1: Core Editor (COMPLETED)
 - [x] Atomic Step 1.1 — Zeno-owned text input/editing (buffer + cursor + selection)
-- [ ] Atomic Step 1.2 — Markdown syntax highlighting (Tree-sitter)
+- [x] Atomic Step 1.2 — Markdown syntax highlighting (Tree-sitter)
 
 ## Phase 2: Hybrid Rendering (PLANNED)
 - [ ] Atomic Step 2.1 — Inline decorations (conceal Markdown markers based on cursor proximity)
