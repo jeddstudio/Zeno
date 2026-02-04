@@ -13,4 +13,4 @@ Built on the cutting-edge GPUI framework, Zeno is a high-performance, local-firs
 - Detailed research logs can be found in the `docs/research/` directory.
 
 ## ⚖️ License
-Licensed under [GPL-v3](LICENSE).
+Licensed under [Apache-2.0](LICENSE).
