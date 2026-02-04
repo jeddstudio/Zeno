@@ -1,6 +1,6 @@
 use std::ops::Range;
 
-use tree_sitter::{Parser, Query, QueryCursor};
+use tree_sitter::{Parser, Query, QueryCursor, StreamingIterator};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HighlightKind {
@@ -43,12 +43,14 @@ pub fn highlight_markdown(source: &str) -> Vec<HighlightSpan> {
     let mut cursor = QueryCursor::new();
     let mut spans = Vec::new();
 
-    for (m, capture_index) in cursor.captures(&query, tree.root_node(), source.as_bytes()) {
-        let capture = m.captures[capture_index];
+    let mut captures = cursor.captures(&query, tree.root_node(), source.as_bytes());
+    captures.advance();
+    while let Some((m, capture_index)) = captures.get() {
+        let capture = m.captures[*capture_index];
         let name = query
             .capture_names()
             .get(capture.index as usize)
-            .map(String::as_str)
+            .copied()
             .unwrap_or("");
 
         let kind = classify_capture_name(name);
@@ -56,6 +58,8 @@ pub fn highlight_markdown(source: &str) -> Vec<HighlightSpan> {
         if range.start < range.end && range.end <= source.len() {
             spans.push(HighlightSpan { range, kind });
         }
+
+        captures.advance();
     }
 
     spans.sort_by_key(|s| (s.range.start, s.range.end));

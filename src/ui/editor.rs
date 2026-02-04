@@ -27,12 +27,12 @@ actions!(
 
 fn color_for_highlight_kind(kind: HighlightKind) -> Option<gpui::Hsla> {
     match kind {
-        HighlightKind::Heading => Some(rgb(0x82aaff)),
-        HighlightKind::Strong => Some(rgb(0xffcb6b)),
-        HighlightKind::Emphasis => Some(rgb(0xffcb6b)),
-        HighlightKind::Code => Some(rgb(0xc3e88d)),
-        HighlightKind::Link => Some(rgb(0x89ddff)),
-        HighlightKind::Punctuation => Some(rgb(0x7a7a7a)),
+        HighlightKind::Heading => Some(rgb(0x82aaff).into()),
+        HighlightKind::Strong => Some(rgb(0xffcb6b).into()),
+        HighlightKind::Emphasis => Some(rgb(0xffcb6b).into()),
+        HighlightKind::Code => Some(rgb(0xc3e88d).into()),
+        HighlightKind::Link => Some(rgb(0x89ddff).into()),
+        HighlightKind::Punctuation => Some(rgb(0x7a7a7a).into()),
         HighlightKind::Other => None,
     }
 }
@@ -642,7 +642,8 @@ impl Element for EditorElement {
             window.paint_quad(quad);
         }
 
-        for (i, line) in prepaint.lines.iter().enumerate() {
+        let lines = std::mem::take(&mut prepaint.lines);
+        for (i, line) in lines.iter().enumerate() {
             let origin = point(
                 bounds.left(),
                 bounds.top() + prepaint.line_height * i as f32,
@@ -656,8 +657,7 @@ impl Element for EditorElement {
             }
         }
 
-        let lines = prepaint.lines.clone();
-        let line_starts = prepaint.line_starts.clone();
+        let line_starts = std::mem::take(&mut prepaint.line_starts);
         let line_height = prepaint.line_height;
         self.editor.update(cx, |editor, _cx| {
             editor.last_bounds = Some(bounds);
